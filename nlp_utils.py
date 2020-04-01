@@ -3,6 +3,7 @@ import spacy
 import numpy as np
 from spacy.tokenizer import Tokenizer
 from spacy.tokens import Doc
+from gensim.parsing.preprocessing import remove_stopwords, preprocess_string
 
 # NLP utils functions
 
@@ -47,21 +48,17 @@ def tokenize_list(nlp, data, lower=False):
     return data_tokenized
 
 
-def lemmatize_list(nlp, data):
-    lenghts = np.cumsum([0] + list(map(len, data)))
-    flat_data = [item for subl in data for item in subl]
-    doc = Doc(nlp.vocab, words=flat_data)
-
-    lemmatized = []
-    for idx in range(1, len(lenghts)):
-        span = doc[lenghts[idx - 1] : lenghts[idx]]
-        lemmatized.append([token.lemma_.lower() for token in span])
-    return lemmatized
-
-
 def strings_to_list(data):
     tkn_list = []
     for item in data:
         for x in item.split():
             tkn_list.append(x)
     return tkn_list
+
+
+def clean_text_data(stemmer, data):
+    data = ' '.join(data)
+    data = remove_stopwords(data)
+    data = stemmer.stem_sentence(data)
+    data = preprocess_string(data)
+    return data
