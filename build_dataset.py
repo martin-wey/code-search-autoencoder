@@ -26,6 +26,7 @@ if __name__ == '__main__':
     func_sequences = []
     docstrings = []
     snippets = []
+    func_code_doc = []
     if args.verbose:
         print('Extracting dataset ...')
     jsonl_files = glob.glob('{}/*.jsonl'.format(args.data_path))
@@ -60,8 +61,12 @@ if __name__ == '__main__':
                     func_subtoken = nlp_utils.strings_to_list(func_subtoken)
                     func_sequences.append(func_subtoken)
 
+                    # Snippet documentation and func sequence concatenated
+                    func_code_doc.append(func_doc_cleaned + func_subtoken)
+
     if args.verbose:
         print('Exporting dataset ...')
+    """
     with open('{}/func_python.txt'.format(args.output_path), 'w+', encoding='utf-8') as fout:
         for item in func_sequences:
             fout.write(' '.join(item))
@@ -74,4 +79,10 @@ if __name__ == '__main__':
 
     with open('{}/code_python.json'.format(args.output_path), 'w+', encoding='utf-8') as fout:
         json.dump(snippets, fout, indent=2)
+    """
+
+    with open('{}/doc_code_python.txt'.format(args.output_path), 'w+', encoding='utf-8') as fout:
+        for item in func_code_doc:
+            fout.write(' '.join(item))
+            fout.write('\n')
     print('Done!')
